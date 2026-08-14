@@ -6,50 +6,34 @@ A clean, modern, and intelligent IT Service Desk web application built for the *
 
 ## 🌟 Key Features
 
-### 1. Dashboard 📊
-- **Real-Time KPI Counters**: Total Incidents, Open Issues (🔴), In Progress (🟡), and Resolved Tickets (🟢).
-- **Recent Incidents Feed**: Quick overview of recently filed tickets with direct access to diagnostics and resolution.
-- **Priority & Category Distribution**: Visual breakdown of incident severities and technical domains.
+## Main Features
 
-### 2. Ticket Management & Lifecycle 🎫
-- **Create Tickets**: Form validation with Title, Detailed Description, Priority (`Urgent`, `High`, `Medium`, `Low`), and Category (`Network`, `Software`, `Hardware`, `Access & Security`, `Email & Communication`, `Cloud & Infrastructure`, `Billing & Accounts`, `Other`).
-- **Interactive Filtering**: Filter by status tabs, priority, category, or real-time keyword search.
-- **Lifecycle Transitions**: Transition status across `Open` ➡️ `In Progress` ➡️ `Resolved` ➡️ `Closed`.
-- **Resolution Recording**: Document root causes, actions taken, and mark incidents resolved with timestamps.
+### 1. Dashboard
+- Shows total, open, in-progress, and resolved incidents.
+- Displays recent incidents.
+- Shows incident priority and category summaries.
 
-### 3. AI Incident Analysis 🤖
-- **One-Click AI Diagnosis**: Click the **"Analyze with AI 🤖"** button on any ticket to trigger diagnostic reasoning.
-- **Structured Output**:
-  - **Executive Summary**: 1-2 sentence overview of the problem.
-  - **Identified Root Cause**: Technical diagnosis of why the incident occurred.
-  - **Suggested Solution**: Step-by-step actionable remediation guide.
-  - **Recommended Classification**: AI suggests optimal Category and Priority with a one-click apply button.
-  - **One-Click Resolution Copy**: Transfer AI remediation steps directly into the Resolution Notes box.
+### 2. Ticket Management
+- Create tickets with title, description, priority, and category.
+- Search and filter tickets.
+- Move tickets through Open, In Progress, Resolved, and Closed.
+- Add root cause and resolution details.
 
-### 4. Technical Knowledge Base 🧠
-- **Pre-Loaded Support Runbooks**: Comprehensive guides for frequent enterprise issues (VPN timeouts, Outlook Modern Auth loops, Database connection pool exhaustion, AWS S3 403 Access Denied, Network printer offline, Docker/WSL2 resource spikes).
-- **Contextual Matching**: Tickets automatically display matching runbooks based on keyword/tag overlap and technical domain.
-- **In-Place Runbook Viewer**: Read and copy runbook commands without leaving the ticket.
+### 3. AI Incident Analysis
+- Analyze incidents using Google Gemini.
+- Generates a short summary, possible root cause, and suggested solution.
+- Recommends the appropriate priority and category.
+- Allows AI-generated solutions to be copied into the resolution notes.
 
-### 5. Persistent Storage 💾
-- Powered by **SQLite** (`data/support_desk.db`) via `better-sqlite3`.
-- Auto-seeds realistic initial incidents and technical runbooks on first boot.
-- Data persists across server restarts and page refreshes.
+### 4. Knowledge Base
+- Includes support guides for common technical issues.
+- Shows relevant guides based on the incident.
+- Allows engineers to view and copy troubleshooting steps.
 
----
-
-## 🛠️ Technology Stack
-
-| Area | Technology |
-| :--- | :--- |
-| **Framework** | [Next.js](https://nextjs.org/) (App Router, Server Actions & Route Handlers) |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) (v4 Dark Mode UI) |
-| **Database** | [SQLite](https://www.sqlite.org/) with `better-sqlite3` |
-| **AI Engine** | [Google Gemini API](https://ai.google.dev/) (`gemini-2.0-flash` / `gemini-1.5-flash`) + Intelligent Fallback |
-| **Icons** | [Lucide React](https://lucide.dev/) + Emojis 🚀 |
-
----
+### 5. Data Storage
+- Uses SQLite to store incidents and knowledge-base data.
+- Data remains available after refreshing or restarting the application.
+- Includes sample incidents and support guides.
 
 ## 🚀 Quick Start Guide
 
@@ -99,43 +83,3 @@ node test-e2e.mjs
 
 ---
 
-## 📂 Project Structure
-
-```
-d:/assignment/
-├── data/
-│   └── support_desk.db        # Persistent SQLite database file
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── ai/analyze/    # AI ticket analysis endpoint
-│   │   │   ├── knowledge-base/# KB search and retrieval endpoint
-│   │   │   ├── stats/         # Dashboard statistics endpoint
-│   │   │   └── tickets/       # CRUD ticket endpoints
-│   │   ├── knowledge-base/    # Knowledge Base browser page
-│   │   ├── tickets/           # Tickets list and detail pages
-│   │   │   └── [id]/          # Ticket detail & AI resolution workbench
-│   │   ├── globals.css        # Tailwind styling & dark theme
-│   │   ├── layout.tsx         # Root layout with navigation & header
-│   │   └── page.tsx           # Dashboard view
-│   ├── components/
-│   │   ├── Badges.tsx         # Status, priority & category badge components
-│   │   ├── CreateTicketModal.tsx # New ticket submission modal
-│   │   └── Navbar.tsx         # Global navigation header
-│   └── lib/
-│       ├── ai.ts              # Gemini AI integration & structured parsing
-│       ├── db.ts              # SQLite database schema, seeding & queries
-│       └── types.ts           # TypeScript interfaces & domain types
-├── test-e2e.mjs               # End-to-end automated test suite
-├── .env.example               # Environment variables template
-└── README.md                  # Documentation
-```
-
----
-
-## 💡 Design Decisions & Assumptions
-
-1. **Simplicity & Zero-Config Persistence**: We selected embedded SQLite via `better-sqlite3` to ensure zero setup friction, fast synchronous queries, and absolute data persistence without requiring external database servers or Docker containers.
-2. **Robust AI Fallback**: The AI service gracefully attempts live Google Gemini generation (`gemini-2.0-flash`). If network restrictions, quota limits, or missing API keys occur, it seamlessly falls back to an intelligent natural language analyzer to prevent any user disruption.
-3. **Contextual Knowledge Integration**: Support engineers don't need to switch tabs to search documentation; relevant runbooks are dynamically matched and previewed directly inside the ticket resolution panel.
-4. **Clean & Modern UI**: Tailored with Tailwind CSS dark mode, high-contrast badges, micro-animations, and visual indicators for an intuitive support desk experience.
