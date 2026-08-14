@@ -1,36 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DigiPlus AI-Powered Service Desk 🤖🎫
 
-## Getting Started
+A clean, modern, and intelligent IT Service Desk web application built for the **DigiPlus Technical Assessment**. The application assists support engineers in triaging natural language incident descriptions, generating automated AI root-cause diagnostics, matching relevant technical knowledge-base runbooks, and recording incident resolutions with persistent SQLite storage.
 
-First, run the development server:
+---
 
+## 🌟 Key Features
+
+### 1. Dashboard 📊
+- **Real-Time KPI Counters**: Total Incidents, Open Issues (🔴), In Progress (🟡), and Resolved Tickets (🟢).
+- **Recent Incidents Feed**: Quick overview of recently filed tickets with direct access to diagnostics and resolution.
+- **Priority & Category Distribution**: Visual breakdown of incident severities and technical domains.
+
+### 2. Ticket Management & Lifecycle 🎫
+- **Create Tickets**: Form validation with Title, Detailed Description, Priority (`Urgent`, `High`, `Medium`, `Low`), and Category (`Network`, `Software`, `Hardware`, `Access & Security`, `Email & Communication`, `Cloud & Infrastructure`, `Billing & Accounts`, `Other`).
+- **Interactive Filtering**: Filter by status tabs, priority, category, or real-time keyword search.
+- **Lifecycle Transitions**: Transition status across `Open` ➡️ `In Progress` ➡️ `Resolved` ➡️ `Closed`.
+- **Resolution Recording**: Document root causes, actions taken, and mark incidents resolved with timestamps.
+
+### 3. AI Incident Analysis 🤖
+- **One-Click AI Diagnosis**: Click the **"Analyze with AI 🤖"** button on any ticket to trigger diagnostic reasoning.
+- **Structured Output**:
+  - **Executive Summary**: 1-2 sentence overview of the problem.
+  - **Identified Root Cause**: Technical diagnosis of why the incident occurred.
+  - **Suggested Solution**: Step-by-step actionable remediation guide.
+  - **Recommended Classification**: AI suggests optimal Category and Priority with a one-click apply button.
+  - **One-Click Resolution Copy**: Transfer AI remediation steps directly into the Resolution Notes box.
+
+### 4. Technical Knowledge Base 🧠
+- **Pre-Loaded Support Runbooks**: Comprehensive guides for frequent enterprise issues (VPN timeouts, Outlook Modern Auth loops, Database connection pool exhaustion, AWS S3 403 Access Denied, Network printer offline, Docker/WSL2 resource spikes).
+- **Contextual Matching**: Tickets automatically display matching runbooks based on keyword/tag overlap and technical domain.
+- **In-Place Runbook Viewer**: Read and copy runbook commands without leaving the ticket.
+
+### 5. Persistent Storage 💾
+- Powered by **SQLite** (`data/support_desk.db`) via `better-sqlite3`.
+- Auto-seeds realistic initial incidents and technical runbooks on first boot.
+- Data persists across server restarts and page refreshes.
+
+---
+
+## 🛠️ Technology Stack
+
+| Area | Technology |
+| :--- | :--- |
+| **Framework** | [Next.js](https://nextjs.org/) (App Router, Server Actions & Route Handlers) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) (v4 Dark Mode UI) |
+| **Database** | [SQLite](https://www.sqlite.org/) with `better-sqlite3` |
+| **AI Engine** | [Google Gemini API](https://ai.google.dev/) (`gemini-2.0-flash` / `gemini-1.5-flash`) + Intelligent Fallback |
+| **Icons** | [Lucide React](https://lucide.dev/) + Emojis 🚀 |
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+ or v20+ / v22+ recommended)
+- `npm` (bundled with Node.js)
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure AI API Key (Optional)
+Copy the example environment file:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Edit `.env.local` and add your **Google Gemini API Key**:
+```env
+GEMINI_API_KEY=your_google_gemini_api_key_here
+```
+> 💡 *Note: If no API key is provided, the application automatically uses an intelligent built-in heuristic diagnostic engine matching HuggingFace help-desk datasets, so the application remains 100% functional out-of-the-box.*
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Run the Development Server
+```bash
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Production Build & Test
+```bash
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧪 Automated End-to-End Testing
 
-## Deploy on Vercel
+To run the automated verification script testing the entire incident lifecycle (Ticket Creation ➡️ AI Analysis ➡️ Runbook Matching ➡️ Resolution ➡️ Dashboard Stats):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+node test-e2e.mjs
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📂 Project Structure
+
+```
+d:/assignment/
+├── data/
+│   └── support_desk.db        # Persistent SQLite database file
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── ai/analyze/    # AI ticket analysis endpoint
+│   │   │   ├── knowledge-base/# KB search and retrieval endpoint
+│   │   │   ├── stats/         # Dashboard statistics endpoint
+│   │   │   └── tickets/       # CRUD ticket endpoints
+│   │   ├── knowledge-base/    # Knowledge Base browser page
+│   │   ├── tickets/           # Tickets list and detail pages
+│   │   │   └── [id]/          # Ticket detail & AI resolution workbench
+│   │   ├── globals.css        # Tailwind styling & dark theme
+│   │   ├── layout.tsx         # Root layout with navigation & header
+│   │   └── page.tsx           # Dashboard view
+│   ├── components/
+│   │   ├── Badges.tsx         # Status, priority & category badge components
+│   │   ├── CreateTicketModal.tsx # New ticket submission modal
+│   │   └── Navbar.tsx         # Global navigation header
+│   └── lib/
+│       ├── ai.ts              # Gemini AI integration & structured parsing
+│       ├── db.ts              # SQLite database schema, seeding & queries
+│       └── types.ts           # TypeScript interfaces & domain types
+├── test-e2e.mjs               # End-to-end automated test suite
+├── .env.example               # Environment variables template
+└── README.md                  # Documentation
+```
+
+---
+
+## 💡 Design Decisions & Assumptions
+
+1. **Simplicity & Zero-Config Persistence**: We selected embedded SQLite via `better-sqlite3` to ensure zero setup friction, fast synchronous queries, and absolute data persistence without requiring external database servers or Docker containers.
+2. **Robust AI Fallback**: The AI service gracefully attempts live Google Gemini generation (`gemini-2.0-flash`). If network restrictions, quota limits, or missing API keys occur, it seamlessly falls back to an intelligent natural language analyzer to prevent any user disruption.
+3. **Contextual Knowledge Integration**: Support engineers don't need to switch tabs to search documentation; relevant runbooks are dynamically matched and previewed directly inside the ticket resolution panel.
+4. **Clean & Modern UI**: Tailored with Tailwind CSS dark mode, high-contrast badges, micro-animations, and visual indicators for an intuitive support desk experience.
